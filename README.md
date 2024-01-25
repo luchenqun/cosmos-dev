@@ -1,3 +1,6 @@
+
+感谢优秀的开源轻量区块浏览器https://ping.pub/，我基于它做一个用于给程序员在开发cosmos sdk区块链的开发工具。
+
 <div align="center">
 
 ![Ping Wallet](./public/logo.svg)
