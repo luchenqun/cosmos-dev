@@ -1,5 +1,5 @@
 
-感谢优秀的开源轻量区块浏览器https://ping.pub/，我基于它做一个用于给程序员在开发cosmos sdk区块链的开发工具。
+感谢优秀的开源轻量区块浏览器 https://ping.pub/ 。我基于它做一个开发工具，方便查看cosmos sdk类型链的链上信息，提高开发效率。
 
 <div align="center">
 
