@@ -4,11 +4,13 @@
     <div class="flex flex-1">
       &copy;&nbsp;
       {{ new Date().getFullYear() }}&nbsp; Made With&nbsp; <img src="../../assets/images/heart.svg" />&nbsp; By&nbsp;
-      <a class="link link-primary no-underline" href="https://ping.pub" target="_blank" rel="noopener noreferrer">Ping.pub</a>
+      <a class="link link-primary no-underline" href="http://cosmos.lucq.fun" target="_blank" rel="noopener noreferrer">Cosmos Dev Tool</a>
+      &nbsp; Fork &nbsp;
+      <a class="link link-primary no-underline" href="https://ping.pub/" target="_blank" rel="noopener noreferrer">Ping.pub</a>
     </div>
     <div class="hidden md:!block">
-      <a class="link link-primary no-underline mr-4" href="https://github.com/ping-pub/explorer/blob/master/LICENSE" target="noopener noreferrer">License</a>
-      <a class="link link-primary no-underline" href="https://github.com/ping-pub/explorer" target="noopener noreferrer">Github</a>
+      <!-- <a class="link link-primary no-underline mr-4" href="https://github.com/ping-pub/explorer/blob/master/LICENSE" target="noopener noreferrer">License</a> -->
+      <a class="link link-primary no-underline" href="https://github.com/luchenqun/cosmos-dev/" target="noopener noreferrer">Github</a>
     </div>
   </footer>
 </template>

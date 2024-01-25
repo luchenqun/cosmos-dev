@@ -115,12 +115,11 @@ const amount = computed({
 
 <template>
   <div>
-    <div v-if="coinInfo && coinInfo.name" class="bg-base-100 rounded shadow mb-4">
+    <div v-if="coinInfo && coinInfo.name && false" class="bg-base-100 rounded shadow mb-4">
       <div class="grid grid-cols-2 md:grid-cols-3 p-4">
         <div class="col-span-2 md:col-span-1">
           <div class="text-xl font-semibold text-main">
-            {{ coinInfo.name }} (<span class="uppercase">{{ coinInfo.symbol }}</span
-            >)
+            {{ coinInfo.name }} (<span class="uppercase">{{ coinInfo.symbol }}</span>)
           </div>
           <div class="text-xs mt-2">
             {{ $t('index.rank') }}:
@@ -128,12 +127,7 @@ const amount = computed({
           </div>
 
           <div class="my-4 flex flex-wrap items-center">
-            <a
-              v-for="(item, index) of comLinks"
-              :key="index"
-              :href="item.href"
-              class="link link-primary px-2 py-1 rounded-sm no-underline hover:text-primary hover:bg-gray-100 dark:hover:bg-slate-800 flex items-center"
-            >
+            <a v-for="(item, index) of comLinks" :key="index" :href="item.href" class="link link-primary px-2 py-1 rounded-sm no-underline hover:text-primary hover:bg-gray-100 dark:hover:bg-slate-800 flex items-center">
               <Icon :icon="item?.icon" />
               <span class="ml-1 text-sm uppercase">{{ item?.name }}</span>
             </a>
@@ -178,16 +172,7 @@ const amount = computed({
 
             <div class="flex">
               <label class="btn btn-primary !px-1 my-5 mr-2" for="calculator">
-                <svg
-                  class="w-8 h-8"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="#ffffff"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
+                <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                   <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                   <g id="SVGRepo_iconCarrier">
@@ -231,12 +216,7 @@ const amount = computed({
                 </div>
                 <label class="modal-backdrop" for="calculator">{{ $t('index.close') }}</label>
               </div>
-              <a
-                class="my-5 !text-white btn grow"
-                :class="{ '!btn-success': store.trustColor === 'green', '!btn-warning': store.trustColor === 'yellow' }"
-                :href="ticker.trade_url"
-                target="_blank"
-              >
+              <a class="my-5 !text-white btn grow" :class="{ '!btn-success': store.trustColor === 'green', '!btn-warning': store.trustColor === 'yellow' }" :href="ticker.trade_url" target="_blank">
                 {{ $t('index.buy') }} {{ coinInfo.symbol || '' }}
               </a>
             </div>
@@ -279,12 +259,7 @@ const amount = computed({
     <div class="bg-base-100 rounded mt-4 shadow">
       <div class="flex justify-between px-4 pt-4 pb-2 text-lg font-semibold text-main">
         <span class="truncate">{{ walletStore.currentAddress || 'Not Connected' }}</span>
-        <RouterLink
-          v-if="walletStore.currentAddress"
-          class="float-right text-sm cursor-pointert link link-primary no-underline font-medium"
-          :to="`/${chain}/account/${walletStore.currentAddress}`"
-          >{{ $t('index.more') }}</RouterLink
-        >
+        <RouterLink v-if="walletStore.currentAddress" class="float-right text-sm cursor-pointert link link-primary no-underline font-medium" :to="`/${chain}/account/${walletStore.currentAddress}`">{{ $t('index.more') }}</RouterLink>
       </div>
       <div class="grid grid-cols-1 md:!grid-cols-4 auto-cols-auto gap-4 px-4 pb-6">
         <div class="bg-gray-100 dark:bg-[#373f59] rounded-sm px-4 py-3">
@@ -340,18 +315,10 @@ const amount = computed({
               </td>
               <td>
                 <div>
-                  <label
-                    for="delegate"
-                    class="btn !btn-xs !btn-primary btn-ghost rounded-sm mr-2"
-                    @click="dialog.open('delegate', { validator_address: item.delegation.validator_address }, updateState)"
-                  >
+                  <label for="delegate" class="btn !btn-xs !btn-primary btn-ghost rounded-sm mr-2" @click="dialog.open('delegate', { validator_address: item.delegation.validator_address }, updateState)">
                     {{ $t('account.btn_delegate') }}
                   </label>
-                  <label
-                    for="withdraw"
-                    class="btn !btn-xs !btn-primary btn-ghost rounded-sm"
-                    @click="dialog.open('withdraw', { validator_address: item.delegation.validator_address }, updateState)"
-                  >
+                  <label for="withdraw" class="btn !btn-xs !btn-primary btn-ghost rounded-sm" @click="dialog.open('withdraw', { validator_address: item.delegation.validator_address }, updateState)">
                     {{ $t('index.btn_withdraw_reward') }}
                   </label>
                 </div>
@@ -368,11 +335,7 @@ const amount = computed({
         <RouterLink to="/wallet/receive" class="btn !bg-info !border-info text-white hidden">{{ $t('index.receive') }}</RouterLink>
       </div>
       <Teleport to="body">
-        <ping-token-convert
-          :chain-name="blockchain?.current?.prettyName"
-          :endpoint="blockchain?.endpoint?.address"
-          :hd-path="walletStore?.connectedWallet?.hdPath"
-        ></ping-token-convert>
+        <ping-token-convert :chain-name="blockchain?.current?.prettyName" :endpoint="blockchain?.endpoint?.address" :hd-path="walletStore?.connectedWallet?.hdPath"></ping-token-convert>
       </Teleport>
     </div>
 
