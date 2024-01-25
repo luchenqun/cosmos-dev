@@ -37,7 +37,7 @@ const sidebarShow = ref(false);
 const sidebarOpen = ref(true);
 
 const changeOpen = (index: Number) => {
-  if (index === 0) {
+  if (index === 1) {
     sidebarOpen.value = !sidebarOpen.value;
   }
 };
@@ -61,10 +61,7 @@ function selected(route: any, nav: NavLink) {
 <template>
   <div class="bg-gray-100 dark:bg-[#171d30]">
     <!-- sidebar -->
-    <div
-      class="w-64 fixed z-50 left-0 top-0 bottom-0 overflow-auto bg-base-100 border-r border-gray-100 dark:border-gray-700"
-      :class="{ block: sidebarShow, 'hidden xl:!block': !sidebarShow }"
-    >
+    <div class="w-64 fixed z-50 left-0 top-0 bottom-0 overflow-auto bg-base-100 border-r border-gray-100 dark:border-gray-700" :class="{ block: sidebarShow, 'hidden xl:!block': !sidebarShow }">
       <div class="flex justify-between mt-1 pl-4 py-4 mb-1">
         <RouterLink to="/" class="flex items-center">
           <img class="w-10 h-10" src="../../assets/logo.svg" />
@@ -75,27 +72,17 @@ function selected(route: any, nav: NavLink) {
         </div>
       </div>
       <div v-for="(item, index) of blockchain.computedChainMenu" :key="index" class="px-2">
-        <div
-          v-if="isNavGroup(item)"
-          :tabindex="index"
-          class="collapse"
-          :class="{
+        <div v-if="isNavGroup(item)" :tabindex="index" class="collapse" :class="{
             'collapse-arrow': item?.children?.length > 0,
-            'collapse-open': index === 0 && sidebarOpen,
-            'collapse-close': index === 0 && !sidebarOpen
-          }"
-        >
+            'collapse-open': index === 1 && sidebarOpen,
+            'collapse-close': index === 1 && !sidebarOpen
+          }">
           <input type="checkbox" class="cursor-pointer !h-10 block" @click="changeOpen(index)" />
           <div class="collapse-title !py-0 px-4 flex items-center cursor-pointer hover:bg-gray-100 dark:hover:bg-[#373f59]">
-            <Icon
-              v-if="item?.icon?.icon"
-              :icon="item?.icon?.icon"
-              class="text-xl mr-2"
-              :class="{
+            <Icon v-if="item?.icon?.icon" :icon="item?.icon?.icon" class="text-xl mr-2" :class="{
                 'text-yellow-500': item?.title === 'Favorite',
                 'text-blue-500': item?.title !== 'Favorite'
-              }"
-            />
+              }" />
             <img v-if="item?.icon?.image" :src="item?.icon?.image" class="w-6 h-6 rounded-full mr-3" />
             <div class="text-base capitalize flex-1 text-gray-700 dark:text-gray-200 whitespace-nowrap">
               {{ item?.title }}
@@ -105,38 +92,19 @@ function selected(route: any, nav: NavLink) {
             </div>
           </div>
           <div class="collapse-content">
-            <div v-for="(el, key) of item?.children" class="menu bg-base-100 w-full !p-0">
-              <RouterLink
-                v-if="isNavLink(el)"
-                @click="sidebarShow = false"
-                class="hover:bg-gray-100 dark:hover:bg-[#373f59] rounded cursor-pointer px-3 py-2 flex items-center"
-                :class="{
+            <div v-for="(el, key) of item?.children" :key="key" class="menu bg-base-100 w-full !p-0">
+              <RouterLink v-if="isNavLink(el)" @click="sidebarShow = false" class="hover:bg-gray-100 dark:hover:bg-[#373f59] rounded cursor-pointer px-3 py-2 flex items-center" :class="{
                   '!bg-primary': selected($route, el)
-                }"
-                :to="el.to"
-              >
-                <Icon
-                  v-if="!el?.icon?.image"
-                  icon="mdi:chevron-right"
-                  class="mr-2 ml-3"
-                  :class="{
+                }" :to="el.to">
+                <Icon v-if="!el?.icon?.image" icon="mdi:chevron-right" class="mr-2 ml-3" :class="{
                     'text-white': $route.path === el?.to?.path && item?.title !== 'Favorite'
-                  }"
-                />
-                <img
-                  v-if="el?.icon?.image"
-                  :src="el?.icon?.image"
-                  class="w-6 h-6 rounded-full mr-3 ml-4"
-                  :class="{
+                  }" />
+                <img v-if="el?.icon?.image" :src="el?.icon?.image" class="w-6 h-6 rounded-full mr-3 ml-4" :class="{
                     'border border-gray-300 bg-white': selected($route, el)
-                  }"
-                />
-                <div
-                  class="text-base capitalize text-gray-500 dark:text-gray-300"
-                  :class="{
+                  }" />
+                <div class="text-base capitalize text-gray-500 dark:text-gray-300" :class="{
                     '!text-white': selected($route, el)
-                  }"
-                >
+                  }">
                   {{ item?.title === 'Favorite' ? el?.title : $t(el?.title) }}
                 </div>
               </RouterLink>
@@ -144,21 +112,11 @@ function selected(route: any, nav: NavLink) {
           </div>
         </div>
 
-        <RouterLink
-          v-if="isNavLink(item)"
-          :to="item?.to"
-          @click="sidebarShow = false"
-          class="cursor-pointer rounded-lg px-4 flex items-center py-2 hover:bg-gray-100 dark:hover:bg-[#373f59]"
-        >
-          <Icon
-            v-if="item?.icon?.icon"
-            :icon="item?.icon?.icon"
-            class="text-xl mr-2"
-            :class="{
+        <RouterLink v-if="isNavLink(item)" :to="item?.to" @click="sidebarShow = false" class="cursor-pointer rounded-lg px-4 flex items-center py-2 hover:bg-gray-100 dark:hover:bg-[#373f59]">
+          <Icon v-if="item?.icon?.icon" :icon="item?.icon?.icon" class="text-xl mr-2" :class="{
               'text-yellow-500': item?.title === 'Favorite',
               'text-blue-500': item?.title !== 'Favorite'
-            }"
-          />
+            }" />
           <img v-if="item?.icon?.image" :src="item?.icon?.image" class="w-6 h-6 rounded-full mr-3 border border-blue-100" />
           <div class="text-base capitalize flex-1 text-gray-700 dark:text-gray-200 whitespace-nowrap">
             {{ item?.title }}
