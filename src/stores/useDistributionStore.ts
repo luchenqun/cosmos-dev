@@ -8,11 +8,11 @@ export const useDistributionStore = defineStore('distributionStore', {
   getters: {
     blockchain() {
       return useBlockchain();
-    },
+    }
   },
   actions: {
     async fetchCommunityPool() {
       return this.blockchain.rpc?.getDistributionCommunityPool();
-    },
-  },
+    }
+  }
 });

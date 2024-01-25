@@ -11,5 +11,5 @@ export default createI18n({
   legacy: false,
   locale: localStorage.getItem('lang') || 'en',
   fallbackLocale: 'en',
-  messages,
+  messages
 });

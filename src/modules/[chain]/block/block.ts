@@ -9,7 +9,7 @@ export const useBlockModule = defineStore('blockModule', {
     return {
       latest: {} as Block,
       current: {} as Block,
-      recents: [] as Block[],
+      recents: [] as Block[]
     };
   },
   getters: {
@@ -28,14 +28,14 @@ export const useBlockModule = defineStore('blockModule', {
             try {
               txs.push({
                 hash: hashTx(tx),
-                tx: decodeTxRaw(tx),
+                tx: decodeTxRaw(tx)
               });
             } catch (e) {}
           }
         })
       );
       return txs;
-    },
+    }
   },
   actions: {
     initial() {
@@ -63,6 +63,6 @@ export const useBlockModule = defineStore('blockModule', {
     async fetchBlock(height: string) {
       this.current = await this.blockchain.rpc?.getBaseBlockAt(height);
       return this.current;
-    },
-  },
+    }
+  }
 });

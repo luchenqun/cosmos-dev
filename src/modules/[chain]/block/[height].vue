@@ -12,9 +12,9 @@ import Countdown from '@/components/Countdown.vue';
 const props = defineProps(['height', 'chain']);
 
 const store = useBaseStore();
-const format = useFormatter()
-const current = ref({} as Block)
-const target = ref(Number(props.height || 0))
+const format = useFormatter();
+const current = ref({} as Block);
+const target = ref(Number(props.height || 0));
 
 const height = computed(() => {
   return Number(current.value.block?.header?.height || props.height || 0);
@@ -22,40 +22,40 @@ const height = computed(() => {
 
 const isFutureBlock = computed({
   get: () => {
-    const latest = store.latest?.block?.header.height
-    const isFuture = latest ? target.value > Number(latest) : true
-    if (!isFuture && !current.value.block_id) store.fetchBlock(target.value).then(x => current.value = x)
-    return isFuture
+    const latest = store.latest?.block?.header.height;
+    const isFuture = latest ? target.value > Number(latest) : true;
+    if (!isFuture && !current.value.block_id) store.fetchBlock(target.value).then((x) => (current.value = x));
+    return isFuture;
   },
-  set: val => {
-    console.log(val)
+  set: (val) => {
+    console.log(val);
   }
-})
+});
 
 const remainingBlocks = computed(() => {
-  const latest = store.latest?.block?.header.height
-  return latest ? Number(target.value) - Number(latest) : 0
-})
+  const latest = store.latest?.block?.header.height;
+  return latest ? Number(target.value) - Number(latest) : 0;
+});
 
 const estimateTime = computed(() => {
-  const seconds = remainingBlocks.value * Number((store.blocktime / 1000).toFixed()) * 1000
-  return seconds
-})
+  const seconds = remainingBlocks.value * Number((store.blocktime / 1000).toFixed()) * 1000;
+  return seconds;
+});
 
 const estimateDate = computed(() => {
-  return new Date(new Date().getTime() + estimateTime.value)
-})
+  return new Date(new Date().getTime() + estimateTime.value);
+});
 
-const edit = ref(false)
-const newHeight = ref(props.height)
+const edit = ref(false);
+const newHeight = ref(props.height);
 function updateTarget() {
-  target.value = Number(newHeight.value)
-  console.log(target.value)
+  target.value = Number(newHeight.value);
+  console.log(target.value);
 }
 
 onBeforeRouteUpdate(async (to, from, next) => {
   if (from.path !== to.path) {
-    store.fetchBlock(String(to.params.height)).then(x => current.value = x);
+    store.fetchBlock(String(to.params.height)).then((x) => (current.value = x));
     next();
   }
 });
@@ -78,12 +78,11 @@ onBeforeRouteUpdate(async (to, from, next) => {
               <tr v-if="edit">
                 <td colspan="2" class="text-center">
                   <h3 class="text-lg font-bold">{{ $t('block.countdown_for_block_input') }}</h3>
-                  <p class="py-4">
+                  <p class="py-4"> </p>
                   <div class="join">
                     <input class="input input-bordered join-item" v-model="newHeight" type="number" />
                     <button class="btn btn-primary join-item" @click="updateTarget()">{{ $t('block.btn_update') }}</button>
                   </div>
-                  </p>
                 </td>
               </tr>
               <tr>
@@ -109,12 +108,10 @@ onBeforeRouteUpdate(async (to, from, next) => {
         <h2 class="card-title flex flex-row justify-between">
           <p class="">#{{ current.block?.header?.height }}</p>
           <div class="flex" v-if="props.height">
-            <RouterLink :to="`/${store.blockchain.chainName}/block/${height - 1}`"
-              class="btn btn-primary btn-sm p-1 text-2xl mr-2">
+            <RouterLink :to="`/${store.blockchain.chainName}/block/${height - 1}`" class="btn btn-primary btn-sm p-1 text-2xl mr-2">
               <Icon icon="mdi-arrow-left" class="w-full h-full" />
             </RouterLink>
-            <RouterLink :to="`/${store.blockchain.chainName}/block/${height + 1}`"
-              class="btn btn-primary btn-sm p-1 text-2xl">
+            <RouterLink :to="`/${store.blockchain.chainName}/block/${height + 1}`" class="btn btn-primary btn-sm p-1 text-2xl">
               <Icon icon="mdi-arrow-right" class="w-full h-full" />
             </RouterLink>
           </div>
@@ -138,5 +135,6 @@ onBeforeRouteUpdate(async (to, from, next) => {
         <h2 class="card-title flex flex-row justify-between">{{ $t('block.last_commit') }}</h2>
         <DynamicComponent :value="current.block?.last_commit" />
       </div>
+    </div>
   </div>
-</div></template>
+</template>

@@ -1,11 +1,4 @@
-import {
-  useBlockchain,
-  useCoingecko,
-  useBaseStore,
-  useBankStore,
-  useFormatter,
-  useGovStore,
-} from '@/stores';
+import { useBlockchain, useCoingecko, useBaseStore, useBankStore, useFormatter, useGovStore } from '@/stores';
 import { useDistributionStore } from '@/stores/useDistributionStore';
 import { useMintStore } from '@/stores/useMintStore';
 import { useStakingStore } from '@/stores/useStakingStore';
@@ -33,7 +26,7 @@ export const useIndexModule = defineStore('module-index', {
         name: '',
         symbol: '',
         description: {
-          en: '',
+          en: ''
         },
         categories: [] as string[],
         market_cap_rank: 0,
@@ -41,12 +34,12 @@ export const useIndexModule = defineStore('module-index', {
           twitter_screen_name: '',
           homepage: [] as string[],
           repos_url: {
-            github: [],
+            github: []
           },
-          telegram_channel_identifier: '',
+          telegram_channel_identifier: ''
         },
         market_data: {
-          price_change_percentage_24h: 0,
+          price_change_percentage_24h: 0
         },
         tickers: [] as {
           market: {
@@ -64,15 +57,15 @@ export const useIndexModule = defineStore('module-index', {
           };
           base: string;
           target: string;
-        }[],
+        }[]
       },
       marketData: {
         market_caps: [],
         prices: [] as number[],
-        total_volumes: [] as number[],
+        total_volumes: [] as number[]
       },
       communityPool: [] as { amount: string; denom: string }[],
-      tally: {} as Record<string, Tally>,
+      tally: {} as Record<string, Tally>
     };
   },
   getters: {
@@ -87,35 +80,33 @@ export const useIndexModule = defineStore('module-index', {
       return useBankStore();
     },
     twitter(): string {
-      if(!this.coinInfo?.links?.twitter_screen_name) return ""
+      if (!this.coinInfo?.links?.twitter_screen_name) return '';
       return `https://twitter.com/${this.coinInfo?.links.twitter_screen_name}`;
     },
     homepage(): string {
-      if(!this.coinInfo?.links?.homepage) return ""
+      if (!this.coinInfo?.links?.homepage) return '';
       const [page1, page2, page3] = this.coinInfo?.links?.homepage;
       return page1 || page2 || page3;
     },
     github(): string {
-      if(!this.coinInfo?.links?.repos_url) return ""
+      if (!this.coinInfo?.links?.repos_url) return '';
       const [page1, page2, page3] = this.coinInfo?.links?.repos_url?.github;
       return page1 || page2 || page3;
     },
     telegram(): string {
-      if(!this.coinInfo?.links?.homepage) return ""
+      if (!this.coinInfo?.links?.homepage) return '';
       return `https://t.me/${this.coinInfo?.links.telegram_channel_identifier}`;
     },
 
     priceChange(): string {
-      if(!this.coinInfo?.market_data?.price_change_percentage_24h) return ""
-      const change =
-        this.coinInfo?.market_data?.price_change_percentage_24h || 0;
+      if (!this.coinInfo?.market_data?.price_change_percentage_24h) return '';
+      const change = this.coinInfo?.market_data?.price_change_percentage_24h || 0;
       return numeral(change).format('+0.[00]');
     },
 
     priceColor(): string {
-      if(!this.coinInfo?.market_data?.price_change_percentage_24h) return ""
-      const change =
-        this.coinInfo?.market_data?.price_change_percentage_24h || 0;
+      if (!this.coinInfo?.market_data?.price_change_percentage_24h) return '';
+      const change = this.coinInfo?.market_data?.price_change_percentage_24h || 0;
       switch (true) {
         case change > 0:
           return 'text-success';
@@ -126,7 +117,7 @@ export const useIndexModule = defineStore('module-index', {
       }
     },
     trustColor(): string {
-      if(!this.coinInfo?.tickers) return ""
+      if (!this.coinInfo?.tickers) return '';
       const change = this.coinInfo?.tickers[this.tickerIndex]?.trust_score;
       return change;
     },
@@ -137,8 +128,8 @@ export const useIndexModule = defineStore('module-index', {
     },
 
     proposals() {
-      const gov = useGovStore()
-      return gov.proposals['2']
+      const gov = useGovStore();
+      return gov.proposals['2'];
     },
 
     stats() {
@@ -154,21 +145,21 @@ export const useIndexModule = defineStore('module-index', {
           color: 'primary',
           icon: 'mdi-pound',
           stats: String(base?.latest?.block?.header?.height || 0),
-          change: 0,
+          change: 0
         },
         {
           title: 'Validators',
           color: 'error',
           icon: 'mdi-human-queue',
           stats: String(base?.latest?.block?.last_commit?.signatures.length || 0),
-          change: 0,
+          change: 0
         },
         {
           title: 'Supply',
           color: 'success',
           icon: 'mdi-currency-usd',
           stats: formatter.formatTokenAmount(bank.supply),
-          change: 0,
+          change: 0
         },
         {
           title: 'Bonded Tokens',
@@ -177,16 +168,16 @@ export const useIndexModule = defineStore('module-index', {
           stats: formatter.formatTokenAmount({
             // @ts-ignore
             amount: this.pool.bonded_tokens,
-            denom: staking.params.bond_denom,
+            denom: staking.params.bond_denom
           }),
-          change: 0,
+          change: 0
         },
         {
           title: 'Inflation',
           color: 'success',
           icon: 'mdi-chart-multiple',
           stats: formatter.formatDecimalToPercent(mintStore.inflation),
-          change: 0,
+          change: 0
         },
         {
           title: 'Community Pool',
@@ -194,12 +185,10 @@ export const useIndexModule = defineStore('module-index', {
           icon: 'mdi-bank',
           stats: formatter.formatTokens(
             // @ts-ignore
-            this.communityPool?.filter(
-              (x: Coin) => x.denom === staking.params.bond_denom
-            )
+            this.communityPool?.filter((x: Coin) => x.denom === staking.params.bond_denom)
           ),
-          change: 0,
-        },
+          change: 0
+        }
       ];
     },
 
@@ -207,7 +196,7 @@ export const useIndexModule = defineStore('module-index', {
       this.tickerIndex = 0;
       // @ts-ignore
       const [firstAsset] = this.blockchain?.assets || [];
-      return firstAsset.coingecko_id
+      return firstAsset.coingecko_id;
     }
   },
   actions: {
@@ -222,7 +211,7 @@ export const useIndexModule = defineStore('module-index', {
             ?.filter((t) => t.denom.length < 10)
             ?.map((t) => ({
               amount: String(parseInt(t.amount)),
-              denom: t.denom,
+              denom: t.denom
             }));
         });
       // const gov = useGovStore();
@@ -240,15 +229,13 @@ export const useIndexModule = defineStore('module-index', {
         this.coingecko.getCoinInfo(firstAsset.coingecko_id).then((x) => {
           this.coinInfo = x;
         });
-        this.coingecko
-          .getMarketChart(this.days, firstAsset.coingecko_id)
-          .then((x) => {
-            this.marketData = x;
-          });
+        this.coingecko.getMarketChart(this.days, firstAsset.coingecko_id).then((x) => {
+          this.marketData = x;
+        });
       }
     },
     selectTicker(i: number) {
       this.tickerIndex = i;
-    },
-  },
+    }
+  }
 });

@@ -4,13 +4,13 @@ import { useBlockchain } from './useBlockchain';
 export const useMintStore = defineStore('mintStore', {
   state: () => {
     return {
-      inflation: '0',
+      inflation: '0'
     };
   },
   getters: {
     blockchain() {
       return useBlockchain();
-    },
+    }
   },
   actions: {
     initial() {
@@ -27,6 +27,6 @@ export const useMintStore = defineStore('mintStore', {
       } catch (e) {
         console.log(e);
       }
-    },
-  },
+    }
+  }
 });

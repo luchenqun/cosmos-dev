@@ -1,12 +1,7 @@
 <script lang="ts" setup>
 import { ref, onMounted, computed, onUnmounted } from 'vue';
 import { fromHex, toBase64 } from '@cosmjs/encoding';
-import {
-  useFormatter,
-  useStakingStore,
-  useBaseStore,
-  useBlockchain,
-} from '@/stores';
+import { useFormatter, useStakingStore, useBaseStore, useBlockchain } from '@/stores';
 import UptimeBar from '@/components/UptimeBar.vue';
 import type { Commit, SlashingParam, SigningInfo } from '@/types';
 import { consensusPubkeyToHexAddress, pubKeyToValcons, valconsToBase64 } from '@/libs';
@@ -27,47 +22,35 @@ const signingInfo = ref({} as Record<string, SigningInfo>);
 
 // filter validators by keywords
 const validators = computed(() => {
-  if (keyword)
-    return stakingStore.validators.filter(
-      (x) => x.description.moniker.indexOf(keyword.value) > -1
-    );
+  if (keyword) return stakingStore.validators.filter((x) => x.description.moniker.indexOf(keyword.value) > -1);
   return stakingStore.validators;
 });
 
 const list = computed(() => {
-  if(chainStore.isConsumerChain) {
-    stakingStore.loadKeyRotationFromLocalstorage(baseStore.latest?.block?.header?.chain_id)
+  if (chainStore.isConsumerChain) {
+    stakingStore.loadKeyRotationFromLocalstorage(baseStore.latest?.block?.header?.chain_id);
 
     const window = Number(slashingParam.value.signed_blocks_window || 0);
     const vset = validators.value.map((v) => {
-      
-      const hexAddress = stakingStore.findRotatedHexAddress(v.consensus_pubkey)
-      const signing =
-        signingInfo.value[hexAddress];
+      const hexAddress = stakingStore.findRotatedHexAddress(v.consensus_pubkey);
+      const signing = signingInfo.value[hexAddress];
       return {
         v,
         signing,
         hex: toBase64(fromHex(hexAddress)),
-        uptime:
-          signing && window > 0
-            ? (window - Number(signing.missed_blocks_counter)) / window
-            : undefined,
+        uptime: signing && window > 0 ? (window - Number(signing.missed_blocks_counter)) / window : undefined
       };
     });
     return vset;
   } else {
     const window = Number(slashingParam.value.signed_blocks_window || 0);
     const vset = validators.value.map((v) => {
-      const signing =
-        signingInfo.value[consensusPubkeyToHexAddress(v.consensus_pubkey)];
+      const signing = signingInfo.value[consensusPubkeyToHexAddress(v.consensus_pubkey)];
       return {
         v,
         signing,
         hex: toBase64(fromHex(consensusPubkeyToHexAddress(v.consensus_pubkey))),
-        uptime:
-          signing && window > 0
-            ? (window - Number(signing.missed_blocks_counter)) / window
-            : undefined,
+        uptime: signing && window > 0 ? (window - Number(signing.missed_blocks_counter)) / window : undefined
       };
     });
     return vset;
@@ -78,10 +61,7 @@ onMounted(() => {
   live.value = true;
   baseStore.fetchLatest().then((l) => {
     let b = l;
-    if (
-      baseStore.recents?.findIndex((x) => x.block_id.hash === l.block_id.hash) >
-      -1
-    ) {
+    if (baseStore.recents?.findIndex((x) => x.block_id.hash === l.block_id.hash) > -1) {
       b = baseStore.recents?.at(0) || l;
     }
     latest.value = Number(b.block.header.height);
@@ -125,9 +105,9 @@ function updateTotalSigningInfo() {
 const commits2 = computed(() => {
   const la = baseStore.recents.map((b) => b.block.last_commit);
   // trigger update total signing info
-  if(la.length > 1 && Number(la.at(la.length-1)?.height|| 0) % 10 === 7) {
+  if (la.length > 1 && Number(la.at(la.length - 1)?.height || 0) % 10 === 7) {
     updateTotalSigningInfo();
-  };
+  }
   const all = [...commits.value, ...la];
   return all.length > 50 ? all.slice(all.length - 50) : all;
 });
@@ -143,67 +123,39 @@ function changeTab(v: string) {
 }
 
 function fetchAllKeyRotation() {
-  stakingStore.fetchAllKeyRotation(baseStore.latest?.block?.header?.chain_id)
+  stakingStore.fetchAllKeyRotation(baseStore.latest?.block?.header?.chain_id);
 }
 </script>
 
 <template>
   <div>
     <div class="tabs tabs-boxed bg-transparent mb-4">
-      <a
-        class="tab text-gray-400 capitalize"
-        :class="{ 'tab-active': tab === '3' }"
-        @click="changeTab('3')"
-        >{{ $t('uptime.overall') }}</a
-      >
-      <a
-        class="tab text-gray-400 capitalize"
-        :class="{ 'tab-active': tab === '2' }"
-        @click="changeTab('2')"
-        >{{ $t('module.blocks') }}</a
-      >
+      <a class="tab text-gray-400 capitalize" :class="{ 'tab-active': tab === '3' }" @click="changeTab('3')">{{ $t('uptime.overall') }}</a>
+      <a class="tab text-gray-400 capitalize" :class="{ 'tab-active': tab === '2' }" @click="changeTab('2')">{{ $t('module.blocks') }}</a>
       <RouterLink :to="`/${chain}/uptime/customize`">
         <a class="tab text-gray-400 capitalize">{{ $t('uptime.customize') }}</a>
       </RouterLink>
     </div>
     <div class="bg-base-100 px-5 pt-5">
       <div class="flex items-center gap-x-4">
-        <input
-          type="text"
-          v-model="keyword"
-          placeholder="Keywords to filter validators"
-          class="input input-sm w-full flex-1 border border-gray-200 dark:border-gray-600"
-        />
+        <input type="text" v-model="keyword" placeholder="Keywords to filter validators" class="input input-sm w-full flex-1 border border-gray-200 dark:border-gray-600" />
         <button v-if="chainStore.isConsumerChain" class="btn btn-sm btn-primary" @click="fetchAllKeyRotation">Load Rotated Keys</button>
       </div>
 
-      <div v-if="chainStore.isConsumerChain && Object.keys(stakingStore.keyRotation).length === 0"
-        class="alert alert-warning my-4"
-      >
+      <div v-if="chainStore.isConsumerChain && Object.keys(stakingStore.keyRotation).length === 0" class="alert alert-warning my-4">
         Note: Please load rotated keys to see the correct uptime
       </div>
       <!-- grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-x-4 mt-4 -->
-      <div
-        class="flex flex-row flex-wrap gap-x-4 mt-4 justify-center"
-        :class="tab === '2' ? '' : 'hidden'"
-      >
+      <div class="flex flex-row flex-wrap gap-x-4 mt-4 justify-center" :class="tab === '2' ? '' : 'hidden'">
         <div v-for="({ v, signing, hex }, i) in list" :key="i">
           <div class="flex items-center justify-between py-0 w-[298px]">
             <label class="truncate text-sm">
-              <span class="ml-1 text-black dark:text-white"
-                >{{ i + 1 }}.{{ v.description.moniker }}</span
-              >
+              <span class="ml-1 text-black dark:text-white">{{ i + 1 }}.{{ v.description.moniker }}</span>
             </label>
-            <div
-              v-if="Number(signing?.missed_blocks_counter || 0) > 10"
-              class="badge badge-sm bg-transparent border-0 text-red-500 font-bold"
-            >
+            <div v-if="Number(signing?.missed_blocks_counter || 0) > 10" class="badge badge-sm bg-transparent border-0 text-red-500 font-bold">
               {{ signing?.missed_blocks_counter }}
             </div>
-            <div
-              v-else
-              class="badge badge-sm bg-transparent text-green-600 border-0 font-bold"
-            >
+            <div v-else class="badge badge-sm bg-transparent text-green-600 border-0 font-bold">
               {{ signing?.missed_blocks_counter }}
             </div>
           </div>
@@ -225,47 +177,26 @@ function fetchAllKeyRotation() {
           </thead>
           <tr v-for="({ v, signing, uptime }, i) in list" class="hover">
             <td>
-              <div class="truncate max-w-sm">
-                {{ i + 1 }}. {{ v.description.moniker }}
-              </div>
+              <div class="truncate max-w-sm">{{ i + 1 }}. {{ v.description.moniker }}</div>
             </td>
             <td class="text-right">
-              <span
-                v-if="signing"
-                class=""
-                :class="
-                  uptime && uptime > 0.95 ? 'text-green-500' : 'text-red-500'
-                "
-              >
-                <div
-                  class="tooltip"
-                  :data-tip="`${signing.missed_blocks_counter} missing blocks`"
-                >
+              <span v-if="signing" class="" :class="uptime && uptime > 0.95 ? 'text-green-500' : 'text-red-500'">
+                <div class="tooltip" :data-tip="`${signing.missed_blocks_counter} missing blocks`">
                   {{ format.percent(uptime) }}
                 </div>
               </span>
             </td>
             <td>
               <span v-if="signing && !signing.jailed_until.startsWith('1970')">
-                <div
-                  class="tooltip"
-                  :data-tip="format.toDay(signing?.jailed_until, 'long')"
-                >
+                <div class="tooltip" :data-tip="format.toDay(signing?.jailed_until, 'long')">
                   <span>{{ format.toDay(signing?.jailed_until, 'from') }}</span>
                 </div>
               </span>
             </td>
             <td class="text-xs text-right">
-              <span
-                v-if="signing && signing.jailed_until.startsWith('1970')"
-                class="text-right"
-                >{{
-                  format.percent(
-                    Number(signing.index_offset) /
-                      (latest - Number(signing.start_height))
-                  )
-                }}</span
-              >
+              <span v-if="signing && signing.jailed_until.startsWith('1970')" class="text-right">{{
+                format.percent(Number(signing.index_offset) / (latest - Number(signing.start_height)))
+              }}</span>
               {{ signing?.index_offset }}
             </td>
             <td class="text-right">{{ signing?.start_height }}</td>
@@ -275,12 +206,8 @@ function fetchAllKeyRotation() {
             <tr>
               <td colspan="2" class="text-right">
                 {{ $t('uptime.minimum_uptime') }}:
-                <span
-                  class="lowercase tooltip"
-                  :data-tip="`Window size: ${slashingParam.signed_blocks_window}`"
-                  ><span class="ml-2 btn btn-error btn-xs">{{
-                    format.percent(slashingParam.min_signed_per_window)
-                  }}</span>
+                <span class="lowercase tooltip" :data-tip="`Window size: ${slashingParam.signed_blocks_window}`"
+                  ><span class="ml-2 btn btn-error btn-xs">{{ format.percent(slashingParam.min_signed_per_window) }}</span>
                 </span>
               </td>
               <td colspan="8"></td>

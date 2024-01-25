@@ -20,23 +20,18 @@ export const useCoingecko = defineStore('coingecko', {
       currency, // secondary currency
       loadStatus: {} as Record<string, LoadingStatus | undefined>,
       prices: {} as Record<string, PriceMeta>,
-      marketChart: {},
+      marketChart: {}
     };
   },
   getters: {},
 
   actions: {
     getMarketChart(days = 30, coinId = 'cosmos') {
-      return get(
-        `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=usd&days=${days}`
-      );
+      return get(`https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=usd&days=${days}`);
     },
 
     fetchCoinPrice(ids: string[]) {
-      const url = `https://api.coingecko.com/api/v3/simple/price?include_24hr_change=true&vs_currencies=${[
-        'usd',
-        this.currency,
-      ].join(',')}&ids=${ids.join(',')}`;
+      const url = `https://api.coingecko.com/api/v3/simple/price?include_24hr_change=true&vs_currencies=${['usd', this.currency].join(',')}&ids=${ids.join(',')}`;
       get(url).then((data) => {
         this.prices = { ...this.prices, ...data };
       });
@@ -49,6 +44,6 @@ export const useCoingecko = defineStore('coingecko', {
         localStorage.setItem(LocalStoreKey, currency);
         this.currency = currency;
       }
-    },
-  },
+    }
+  }
 });

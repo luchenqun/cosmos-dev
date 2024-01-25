@@ -5,5 +5,5 @@ export const useStoreName = defineStore('template', {
     return {};
   },
   getters: {},
-  actions: {},
+  actions: {}
 });

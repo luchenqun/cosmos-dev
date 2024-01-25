@@ -22,61 +22,61 @@ export const useParamStore = defineStore('paramstore', {
           subtitle: 'height',
           icon: 'BoxIcon',
           color: 'light-success',
-          value: '-',
+          value: '-'
         },
         {
           subtitle: 'bonded_and_supply',
           icon: 'DollarSignIcon',
           color: 'light-danger',
-          value: '-',
+          value: '-'
         },
         {
           subtitle: 'bonded_ratio',
           icon: 'PercentIcon',
           color: 'light-warning',
-          value: '-',
+          value: '-'
         },
         {
           subtitle: 'inflation',
           icon: 'TrendingUpIcon',
           color: 'light-primary',
-          value: '-',
-        },
-      ],
+          value: '-'
+        }
+      ]
     },
     mint: {
       title: 'Mint Parameters',
-      items: [] as Array<any>,
+      items: [] as Array<any>
     },
     staking: {
       title: 'Staking Parameters',
-      items: [] as Array<any>,
+      items: [] as Array<any>
     },
     distribution: {
       title: 'Distribution Parameters',
-      items: [] as Array<any>,
+      items: [] as Array<any>
     },
     slashing: {
       title: 'Slashing Parameters',
-      items: [] as Array<any>,
+      items: [] as Array<any>
     },
     gov: {
       title: 'Governance Parameters',
-      items: [] as Array<any>,
+      items: [] as Array<any>
     },
     appVersion: {
       title: 'Application Version',
-      items: {},
+      items: {}
     },
     nodeVersion: {
       title: 'Node Information',
-      items: {},
-    },
+      items: {}
+    }
   }),
   getters: {
     blockchain() {
       return useBlockchain();
-    },
+    }
   },
   actions: {
     initial() {
@@ -91,9 +91,7 @@ export const useParamStore = defineStore('paramstore', {
     async handleBaseBlockLatest() {
       try {
         const res = await this.getBaseTendermintBlockLatest();
-        const height = this.chain.items.findIndex(
-          (x) => x.subtitle === 'height'
-        );
+        const height = this.chain.items.findIndex((x) => x.subtitle === 'height');
         this.chain.title = `Chain ID: ${res.block.header.chain_id}`;
         this.chain.items[height].value = res.block.header.height;
         // if (timeIn(res.block.header.time, 3, 'm')) {
@@ -113,38 +111,21 @@ export const useParamStore = defineStore('paramstore', {
       this.staking.items = Object.entries(res.params)
         .map(([key, value]) => ({ subtitle: key, value: value }))
         .filter((item: any) => {
-          if (
-            !['min_commission_rate', 'min_self_delegation'].includes(
-              item.subtitle
-            )
-          )
-            return item;
+          if (!['min_commission_rate', 'min_self_delegation'].includes(item.subtitle)) return item;
         });
-      Promise.all([this.getStakingPool(), this.getBankTotal(bond_denom)]).then(
-        (resArr) => {
-          const pool = resArr[0]?.pool;
-          const amount = resArr[1]?.amount?.amount;
-          const assets = this.blockchain.current?.assets;
-          const bondedAndSupply = this.chain.items.findIndex(
-            (x) => x.subtitle === 'bonded_and_supply'
-          );
-          this.chain.items[bondedAndSupply].value = `${formatNumber(
-            formatTokenAmount(assets, pool.bonded_tokens, 2, bond_denom, false),
-            true,
-            0
-          )}/${formatNumber(
-            formatTokenAmount(assets, amount, 2, bond_denom, false),
-            true,
-            0
-          )}`;
-          const bondedRatio = this.chain.items.findIndex(
-            (x) => x.subtitle === 'bonded_ratio'
-          );
-          this.chain.items[bondedRatio].value = `${percent(
-            Number(pool.bonded_tokens) / Number(amount)
-          )}%`;
-        }
-      );
+      Promise.all([this.getStakingPool(), this.getBankTotal(bond_denom)]).then((resArr) => {
+        const pool = resArr[0]?.pool;
+        const amount = resArr[1]?.amount?.amount;
+        const assets = this.blockchain.current?.assets;
+        const bondedAndSupply = this.chain.items.findIndex((x) => x.subtitle === 'bonded_and_supply');
+        this.chain.items[bondedAndSupply].value = `${formatNumber(formatTokenAmount(assets, pool.bonded_tokens, 2, bond_denom, false), true, 0)}/${formatNumber(
+          formatTokenAmount(assets, amount, 2, bond_denom, false),
+          true,
+          0
+        )}`;
+        const bondedRatio = this.chain.items.findIndex((x) => x.subtitle === 'bonded_ratio');
+        this.chain.items[bondedRatio].value = `${percent(Number(pool.bonded_tokens) / Number(amount))}%`;
+      });
     },
     async handleMintParam() {
       const excludes = this.blockchain.current?.excludes;
@@ -161,33 +142,27 @@ export const useParamStore = defineStore('paramstore', {
       const res = await this.getSlashingParams();
       this.slashing.items = Object.entries(res.params).map(([key, value]) => ({
         subtitle: key,
-        value: value,
+        value: value
       }));
     },
     async handleDistributionParams() {
       const res = await this.getDistributionParams();
-      this.distribution.items = Object.entries(res.params).map(
-        ([key, value]) => ({ subtitle: key, value: value })
-      );
+      this.distribution.items = Object.entries(res.params).map(([key, value]) => ({ subtitle: key, value: value }));
     },
     async handleGovernanceParams() {
       const excludes = this.blockchain.current?.excludes;
       if (excludes && excludes.indexOf('governance') > -1) {
         return;
       }
-      Promise.all([
-        this.getGovParamsVoting(),
-        this.getGovParamsDeposit(),
-        this.getGovParamsTally(),
-      ]).then((resArr) => {
+      Promise.all([this.getGovParamsVoting(), this.getGovParamsDeposit(), this.getGovParamsTally()]).then((resArr) => {
         const govParams = {
           ...resArr[0]?.voting_params,
           ...resArr[1]?.deposit_params,
-          ...resArr[2]?.tally_params,
+          ...resArr[2]?.tally_params
         };
         this.gov.items = Object.entries(govParams).map(([key, value]) => ({
           subtitle: key,
-          value: value,
+          value: value
         }));
       });
     },
@@ -195,13 +170,9 @@ export const useParamStore = defineStore('paramstore', {
       const res = await this.fetchAbciInfo();
 
       localStorage.setItem(`sdk_version_${this.blockchain.chainName}`, res.application_version?.cosmos_sdk_version);
-      
-      this.appVersion.items = Object.entries(res.application_version).map(
-        ([key, value]) => ({ subtitle: key, value: value })
-      );
-      this.nodeVersion.items = Object.entries(res.default_node_info).map(
-        ([key, value]) => ({ subtitle: key, value: value })
-      );
+
+      this.appVersion.items = Object.entries(res.application_version).map(([key, value]) => ({ subtitle: key, value: value }));
+      this.nodeVersion.items = Object.entries(res.default_node_info).map(([key, value]) => ({ subtitle: key, value: value }));
     },
     async getBaseTendermintBlockLatest() {
       return await this.blockchain.rpc?.getBaseBlockLatest();
@@ -242,6 +213,6 @@ export const useParamStore = defineStore('paramstore', {
     },
     async fetchAbciInfo() {
       return this.blockchain.rpc?.getBaseNodeInfo();
-    },
-  },
+    }
+  }
 });

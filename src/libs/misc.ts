@@ -1,13 +1,7 @@
 import { sha256 } from '@cosmjs/crypto';
 import { toHex } from '@cosmjs/encoding';
 
-export function newPageRequest(param: {
-  key?: Uint8Array;
-  limit?: number;
-  offset?: number;
-  countTotal?: boolean;
-  reverse?: boolean;
-}) {
+export function newPageRequest(param: { key?: Uint8Array; limit?: number; offset?: number; countTotal?: boolean; reverse?: boolean }) {
   return param;
 }
 

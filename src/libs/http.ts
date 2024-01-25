@@ -1,9 +1,6 @@
 import fetch from 'cross-fetch';
 
-export async function fetchData<T>(
-  url: string,
-  adapter: (source: any) => T
-): Promise<T> {
+export async function fetchData<T>(url: string, adapter: (source: any) => T): Promise<T> {
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error(`HTTP error: ${response.status}`);
@@ -47,7 +44,7 @@ const policies = [
   'unsafe-url'
 ];
 export async function get(url: string) {
-  return (await fetch(url, {referrerPolicy: 'unsafe-url'})).json();
+  return (await fetch(url, { referrerPolicy: 'unsafe-url' })).json();
 }
 
 export async function post(url: string, data: any) {
@@ -59,9 +56,9 @@ export async function post(url: string, data: any) {
     headers: {
       'Content-Type': 'application/json',
       Accept: '*/*',
-      'Accept-Encoding': 'gzip, deflate, br',
+      'Accept-Encoding': 'gzip, deflate, br'
     },
-    body: JSON.stringify(data), // body data type must match "Content-Type" header
+    body: JSON.stringify(data) // body data type must match "Content-Type" header
   });
   // const response = axios.post((config ? config.api : this.config.api) + url, data)
   return response.json(); // parses JSON response into native JavaScript objects
