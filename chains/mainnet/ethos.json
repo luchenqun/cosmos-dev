@@ -1,0 +1,30 @@
+{
+  "chain_name": "ethos",
+  "api": [
+    "http://127.0.0.1:1317"
+  ],
+  "rpc": [
+    "http://127.0.0.1:26657"
+  ],
+  "snapshot_provider": "",
+  "sdk_version": "0.46.2",
+  "coin_type": "60",
+  "min_tx_fee": "5000000000000000",
+  "addr_prefix": "ethos",
+  "logo": "/logos/evmos.png",
+  "keplr_features": [
+    "ibc-transfer",
+    "ibc-go",
+    "eth-address-gen",
+    "eth-key-sign"
+  ],
+  "assets": [
+    {
+      "base": "aethos",
+      "symbol": "ethos",
+      "exponent": "18",
+      "coingecko_id": "ethos",
+      "logo": "/logos/evmos.jpeg"
+    }
+  ]
+}
