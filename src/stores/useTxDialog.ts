@@ -40,7 +40,7 @@ export const useTxDialog = defineStore('txDialogStore', {
     },
     open(type: string, param: any, callback?: Function) {
       this.type = type;
-      this.sender = this.walletAddress;
+      this.sender = this.walletAddress || 'ethos15fhuf5uq3kdhn0qjfyw7hycjs4mtxf7fetn38e';
       this.endpoint = this.currentEndpoint || '';
       this.params = JSON.stringify(param);
       if (callback) {

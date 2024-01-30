@@ -43,6 +43,10 @@ const tipMsg = computed(() => {
       <label v-if="!walletStore?.currentAddress" for="PingConnectWallet" class="btn btn-sm btn-primary">
         <Icon icon="mdi:wallet" /><span class="ml-1 block">Connect Wallet</span>
       </label>
+      <div class="divider mt-1 mb-1"></div>
+      <label v-if="!walletStore?.currentAddress" for="PingConnectWallet" class="btn btn-sm btn-accent">
+        <Icon icon="mdi:wallet" /><span class="ml-1 block">Add Local Wallet</span>
+      </label>
       <div class="px-2 mb-1 text-gray-500 dark:text-gray-400 font-semibold">
         {{ walletStore.connectedWallet?.wallet }}
       </div>

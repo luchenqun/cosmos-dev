@@ -17,7 +17,7 @@ export const percent = (num: number) => {
 export function stringToUint8Array(str: string) {
   const arr = [];
   for (let i = 0, j = str.length; i < j; ++i) {
-    arr.push(str.charCodeAt(i));
+    arr.push(str.charCodeAt(i) as never);
   }
   return new Uint8Array(arr);
 }

@@ -1,4 +1,3 @@
-// import 'ping-widget';
 import App from '@/App.vue';
 import i18n from '@/plugins/i18n';
 import '@/style.css';
@@ -6,6 +5,7 @@ import { createApp, ref } from 'vue';
 import { createPinia } from 'pinia';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 import LazyLoad from 'lazy-load-vue3';
+import './widget/widget';
 
 import router from './router';
 import { useBaseStore } from './stores/useBaseStore';

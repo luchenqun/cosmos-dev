@@ -3,14 +3,18 @@
   "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
   "compilerOptions": {
     // "ignoreDeprecations": "5.0",
-    "lib": [      
-      "es2022",
-      "dom"
-    ],
+    "lib": ["es2022", "dom"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    /* Bundler mode */
+    "moduleResolution": "node",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "preserve",
+    "noImplicitAny": false
   },
 
   "references": [

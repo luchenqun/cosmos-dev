@@ -26,11 +26,11 @@ export class PageRequest {
   }
   toQueryString() {
     const query = [];
-    if (this.key) query.push(`pagination.key=${this.key}`);
-    if (this.limit) query.push(`pagination.limit=${this.limit}`);
-    if (this.offset !== undefined) query.push(`pagination.offset=${this.offset}`);
-    if (this.count_total) query.push(`pagination.count_total=${this.count_total}`);
-    if (this.reverse) query.push(`pagination.reverse=${this.reverse}`);
+    if (this.key) query.push(`pagination.key=${this.key}` as never);
+    if (this.limit) query.push(`pagination.limit=${this.limit}` as never);
+    if (this.offset !== undefined) query.push(`pagination.offset=${this.offset}` as never);
+    if (this.count_total) query.push(`pagination.count_total=${this.count_total}` as never);
+    if (this.reverse) query.push(`pagination.reverse=${this.reverse}` as never);
     return query.join('&');
   }
   setPage(page: number) {

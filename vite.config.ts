@@ -5,6 +5,7 @@ import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import Layouts from 'vite-plugin-vue-layouts';
 import DefineOptions from 'unplugin-vue-define-options/vite';
+import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill';
 import AutoImport from 'unplugin-auto-import/vite';
 import Pages from 'vite-plugin-pages';
 
@@ -19,51 +20,49 @@ export default defineConfig({
     vue({
       template: {
         compilerOptions: {
-          isCustomElement: (tag) =>
-            [
-              'ping-connect-wallet',
-              'ping-token-convert',
-              'ping-tx-dialog',
-            ].includes(tag),
-        },
-      },
+          isCustomElement: (tag) => ['ping-connect-wallet', 'ping-token-convert', 'ping-tx-dialog'].includes(tag)
+        }
+      }
     }),
     vueJsx(),
     Pages({
       dirs: ['./src/modules', './src/pages'],
-      exclude: ['**/*.ts'], // only load .vue as modules
+      exclude: ['**/*.ts'] // only load .vue as modules
     }),
     Layouts({
-      layoutsDirs: './src/layouts/',
+      layoutsDirs: './src/layouts/'
     }),
     AutoImport({
-      imports: [
-        'vue',
-        'vue-router',
-        '@vueuse/core',
-        '@vueuse/math',
-        'vue-i18n',
-        'pinia',
-      ],
-      vueTemplate: true,
+      imports: ['vue', 'vue-router', '@vueuse/core', '@vueuse/math', 'vue-i18n', 'pinia'],
+      vueTemplate: true
     }),
     VueI18nPlugin({
       runtimeOnly: true,
       compositionOnly: true,
-      include: [
-        fileURLToPath(
-          new URL('./src/plugins/i18n/locales/**', import.meta.url)
-        ),
-      ],
+      include: [fileURLToPath(new URL('./src/plugins/i18n/locales/**', import.meta.url))]
     }),
-    DefineOptions(),
+    DefineOptions()
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
-    },
+      '@': fileURLToPath(new URL('./src', import.meta.url))
+    }
   },
   optimizeDeps: {
     entries: ['./src/**/*.vue'],
-  },
+    force: true,
+
+    esbuildOptions: {
+      target: ['es2020'],
+      define: {
+        global: 'globalThis'
+      },
+      plugins: [
+        NodeGlobalsPolyfillPlugin({
+          process: true,
+          buffer: true
+        })
+      ]
+    }
+  }
 });
