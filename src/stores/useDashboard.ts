@@ -252,7 +252,7 @@ export enum ConfigSource {
 
 export const useDashboard = defineStore('dashboard', {
   state: () => {
-    const favMap = JSON.parse(localStorage.getItem('favoriteMap') || '{"cosmos":true, "osmosis":true}');
+    const favMap = JSON.parse(localStorage.getItem('favoriteMap') || '{"ethos":true, "evmos":true, "cosmos":true, "osmosis":true}');
     return {
       status: LoadingStatus.Empty,
       source: ConfigSource.MainnetCosmosDirectory,
