@@ -39,6 +39,7 @@
     "numeral": "^2.0.6",
     "osmojs": "^14.0.0-rc.0",
     "pinia": "^2.0.28",
+    "pinia-plugin-persistedstate": "^3.2.1",
     "postcss": "^8.4.23",
     "qrcode": "^1.5.3",
     "tailwindcss": "^3.3.1",

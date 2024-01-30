@@ -65,3 +65,9 @@ export interface UptimeStatus {
   filled: boolean;
   signed: boolean;
 }
+
+export interface Wallet {
+  name: string;
+  privateKey: string;
+  latest: boolean;
+}

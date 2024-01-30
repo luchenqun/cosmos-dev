@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { useBlockchain } from './useBlockchain';
 import { fromBech32, toBech32 } from '@cosmjs/encoding';
-import type { Delegation, Coin, UnbondingResponses, DelegatorRewards, WalletConnected } from '@/types';
+import type { Delegation, Coin, UnbondingResponses, DelegatorRewards, WalletConnected, Wallet } from '@/types';
 import { useStakingStore } from './useStakingStore';
 import router from '@/router';
 
@@ -12,7 +12,14 @@ export const useWalletStore = defineStore('walletStore', {
       delegations: [] as Delegation[],
       unbonding: [] as UnbondingResponses[],
       rewards: { total: [], rewards: [] } as DelegatorRewards,
-      wallet: {} as WalletConnected
+      wallet: {} as WalletConnected,
+      wallets: [
+        {
+          privateKey: 'f78a036930ce63791ea6ea20072986d8c3f16a6811f6a2583b0787c45086f769',
+          name: 'admin',
+          latest: true
+        }
+      ] as Wallet[]
     };
   },
   getters: {
@@ -70,6 +77,15 @@ export const useWalletStore = defineStore('walletStore', {
         return `${address.substring(address.length - 4)}`;
       }
       return '';
+    },
+    wallets(): Wallet[] {
+      return this.wallets;
+    },
+    latestWallet(): Wallet {
+      for (const wallet of this.wallets) {
+        if (wallet.latest) return wallet;
+      }
+      return this.wallets[0];
     }
   },
   actions: {
@@ -110,5 +126,8 @@ export const useWalletStore = defineStore('walletStore', {
       // const router = useRouter()
       router.push({ path: '/wallet/keplr' });
     }
+  },
+  persist: {
+    key: 'wallet'
   }
 });

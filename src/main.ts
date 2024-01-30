@@ -4,6 +4,7 @@ import i18n from '@/plugins/i18n';
 import '@/style.css';
 import { createApp, ref } from 'vue';
 import { createPinia } from 'pinia';
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 import LazyLoad from 'lazy-load-vue3';
 
 import router from './router';
@@ -11,9 +12,12 @@ import { useBaseStore } from './stores/useBaseStore';
 
 // Create vue app
 const app = createApp(App);
+const pinia = createPinia();
+pinia.use(piniaPluginPersistedstate);
+
 // Use plugins
 app.use(i18n);
-app.use(createPinia());
+app.use(pinia);
 app.use(router);
 app.use(LazyLoad, { component: true });
 // Mount vue app

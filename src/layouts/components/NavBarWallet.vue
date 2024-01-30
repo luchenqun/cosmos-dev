@@ -4,6 +4,7 @@ import { Icon } from '@iconify/vue';
 import { ref, computed } from 'vue';
 
 const walletStore = useWalletStore();
+// walletStore.initial();
 const chainStore = useBlockchain();
 const baseStore = useBaseStore();
 // walletStore.$subscribe((m, s) => {
