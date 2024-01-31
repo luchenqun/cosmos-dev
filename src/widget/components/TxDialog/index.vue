@@ -31,6 +31,7 @@ const props = defineProps({
   sender: { type: String, required: true },
   hdPath: String,
   registryName: String,
+  privateKey: { type: String, required: true },
   params: String
 });
 
@@ -157,7 +158,7 @@ async function initData() {
 }
 async function sendTx() {
   try {
-    console.log("sendTx......")
+    console.log("sendTx......", JSON.stringify(props))
     if (!props.sender) throw new Error('Sender should not be empty!');
     if (!props.endpoint) throw new Error('Endpoint is empty');
     if (!feeDenom.value) throw new Error('Fee Denom is empty');
@@ -290,7 +291,7 @@ function fetchTx(tx: string) {
 
         <div v-if="sender">
           <div v-if="view === 'input'">
-            <component :is="msgType" ref="msgBox" :endpoint="endpoint" :sender="sender" :balances="balance" :metadata="metadatas" :params="props.params" />
+            <component :is="msgType" ref="msgBox" privateKey="xxxx" :endpoint="endpoint" :sender="sender" :balances="balance" :metadata="metadatas" :params="props.params" />
             <form class="space-y-6" action="#" method="POST">
               <div :class="advance ? '' : 'hidden'">
                 <div class="form-control">

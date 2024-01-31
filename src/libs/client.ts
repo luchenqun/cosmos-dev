@@ -70,6 +70,10 @@ export class CosmosRestClient extends BaseRestClient<RequestRegistry> {
   async getAuthAccount(address: string) {
     return this.request(this.registry.auth_account_address, { address });
   }
+  async getAuthBech32() {
+    return this.request(this.registry.auth_bech32, {});
+  }
+
   // Bank Module
   async getBankParams() {
     return this.request(this.registry.bank_params, {});

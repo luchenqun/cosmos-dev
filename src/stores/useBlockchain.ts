@@ -14,6 +14,8 @@ export const useBlockchain = defineStore('blockchain', {
       status: {} as Record<string, string>,
       rest: '',
       chainName: '',
+      prefix: '' as string,
+      ecdsa: 'eth_secp265k1',
       endpoint: {} as {
         type?: EndpointType;
         address: string;
@@ -109,6 +111,8 @@ export const useBlockchain = defineStore('blockchain', {
       useGovStore().initial();
       useMintStore().initial();
       useBlockModule().initial();
+      const { bech32_prefix: prefix } = await this.rpc.getAuthBech32();
+      this.prefix = prefix;
     },
 
     randomEndpoint(chainName: string): Endpoint | undefined {

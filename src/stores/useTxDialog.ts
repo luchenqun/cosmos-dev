@@ -11,7 +11,8 @@ export const useTxDialog = defineStore('txDialogStore', {
       sender: '',
       type: 'send',
       endpoint: '',
-      params: ''
+      params: '',
+      privateKey: ''
     };
   },
   getters: {
@@ -38,11 +39,13 @@ export const useTxDialog = defineStore('txDialogStore', {
       this.endpoint = endpoint;
       this.params = JSON.stringify(param);
     },
-    open(type: string, param: any, callback?: Function) {
+    async open(type: string, param: any, callback?: Function) {
+      await useWalletStore().bech32Address();
       this.type = type;
-      this.sender = this.walletAddress || 'ethos15fhuf5uq3kdhn0qjfyw7hycjs4mtxf7fetn38e';
+      this.sender = await useWalletStore().bech32Address();
       this.endpoint = this.currentEndpoint || '';
       this.params = JSON.stringify(param);
+      this.privateKey = useWalletStore().latestWallet.privateKey;
       if (callback) {
         CALLBACK = callback;
       } else {

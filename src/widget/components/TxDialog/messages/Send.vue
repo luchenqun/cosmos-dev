@@ -9,7 +9,8 @@ const props = defineProps({
   sender: { type: String, required: true },
   balances: Object as PropType<Coin[]>,
   metadata: Object as PropType<Record<string, CoinMetadata>>,
-  params: String
+  params: String,
+  privateKey: { type: String, required: true },
 });
 
 const amount = ref('');

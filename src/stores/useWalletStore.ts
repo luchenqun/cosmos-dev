@@ -1,7 +1,9 @@
 import { defineStore } from 'pinia';
 import { useBlockchain } from './useBlockchain';
-import { fromBech32, toBech32 } from '@cosmjs/encoding';
-import type { Delegation, Coin, UnbondingResponses, DelegatorRewards, WalletConnected, Wallet } from '@/types';
+import { fromBech32, toBech32, toHex, fromHex } from '@cosmjs/encoding';
+import { DirectSecp256k1Wallet } from '@cosmjs/proto-signing';
+import { Wallet } from 'ethers';
+import type { Delegation, Coin, UnbondingResponses, DelegatorRewards, WalletConnected, IWallet } from '@/types';
 import { useStakingStore } from './useStakingStore';
 import router from '@/router';
 
@@ -19,7 +21,7 @@ export const useWalletStore = defineStore('walletStore', {
           name: 'admin',
           latest: true
         }
-      ] as Wallet[]
+      ] as IWallet[]
     };
   },
   getters: {
@@ -78,10 +80,7 @@ export const useWalletStore = defineStore('walletStore', {
       }
       return '';
     },
-    wallets(): Wallet[] {
-      return this.wallets;
-    },
-    latestWallet(): Wallet {
+    latestWallet(): IWallet {
       for (const wallet of this.wallets) {
         if (wallet.latest) return wallet;
       }
@@ -112,6 +111,24 @@ export const useWalletStore = defineStore('walletStore', {
     },
     myUnbonding() {
       return this.blockchain.rpc.getStakingDelegatorUnbonding(this.currentAddress);
+    },
+    async bech32Address() {
+      const chainStore = useBlockchain();
+      const prefix = chainStore.current?.bech32Prefix || chainStore.prefix;
+      const hexAddress = await this.hexAddress();
+      console.log('------>', hexAddress, prefix);
+      return toBech32(prefix, fromHex(hexAddress.replace('0x', '')));
+    },
+    async hexAddress() {
+      const chainStore = useBlockchain();
+      if (chainStore.ecdsa === 'eth_secp265k1') {
+        let w = new Wallet(this.latestWallet.privateKey);
+        return w.address;
+      } else {
+        let w = await DirectSecp256k1Wallet.fromKey(fromHex(this.latestWallet.privateKey));
+        const [curAcc] = await w.getAccounts();
+        return '0x' + toHex(fromBech32(curAcc.address).data);
+      }
     },
     disconnect() {
       const chainStore = useBlockchain();
